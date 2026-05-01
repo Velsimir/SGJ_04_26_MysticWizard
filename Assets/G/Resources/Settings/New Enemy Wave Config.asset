@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae8f9c293eb744c6ae65e0456ebb7767, type: 3}
+  m_Name: New Enemy Wave Config
+  m_EditorClassIdentifier: Assembly-CSharp::G.Scripts.EnemyLogic.EnemyWaveConfig
+  totalWaves: 10
+  timeBetweenWaves: 5.5
+  spawnX: 10
+  minY: -4
+  maxY: 3
+  verticalSpacing: 1.5
+  minEnemiesPerColumn: 1
+  maxEnemiesPerColumn: 6
+  enemyPrefabs:
+  - {fileID: 3582362694114330989, guid: 83e5e505d3e74fd4091eb5f598646dcd, type: 3}
+  bossPrefab: {fileID: 3582362694114330989, guid: 2a2f3219dba3fe249ade88785ab6da8d, type: 3}
+  bossHp: 50
+  bossMoveSpeed: 0.3
+  normalMoveSpeed: 0.5
+  baseEnemies: 2
+  enemyGrowthRate: 1.12
+  tier1Prefabs:
+  - {fileID: 3582362694114330989, guid: 83e5e505d3e74fd4091eb5f598646dcd, type: 3}
+  tier2Prefabs:
+  - {fileID: 3582362694114330989, guid: 34bef8a573e525b48a9ce19c7b855ded, type: 3}
+  tier3Prefabs:
+  - {fileID: 3582362694114330989, guid: 3c5845e58de7b714489f92fff49d03d2, type: 3}
+  tier4Prefabs: []
+  tier2UnlockWave: 2
+  tier3UnlockWave: 3
+  tier4UnlockWave: 4

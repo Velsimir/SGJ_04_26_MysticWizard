@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: ClassicBulletSettings
   m_EditorClassIdentifier: Assembly-CSharp::G.Scripts.BulletLogic.BulletSettings
   bulletPrefab: {fileID: 604372511518828603, guid: 029f30cfb537a394f8e64fdb4ffcc213, type: 3}
-  _speed: 5
+  _speed: 3

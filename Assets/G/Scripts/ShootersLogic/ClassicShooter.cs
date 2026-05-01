@@ -14,7 +14,7 @@ namespace G.Scripts.PlayerLogic
         private float _lastShootTime;
         private Transform _shootPosition;
         
-        private readonly float _timeBetweenShoot = 2f;
+        private readonly float _timeBetweenShoot = 1f;
         
         public ClassicShooter()
         {
