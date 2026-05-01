@@ -32,7 +32,7 @@ namespace G.Scripts.Services.Input
         }
     }
 
-    public interface IInputService
+    public interface IInputService : IService
     {
         ReactiveProperty<Vector2> Move { get; }
         ReactiveProperty<Vector2> Look { get; }
