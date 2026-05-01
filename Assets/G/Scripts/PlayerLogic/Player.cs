@@ -1,4 +1,6 @@
-﻿using G.Scripts.ShootersLogic;
+﻿using G.Scripts.Services.ArrowSequence;
+using G.Scripts.Services.Input;
+using G.Scripts.ShootersLogic;
 using UnityEngine;
 
 namespace G.Scripts.PlayerLogic
@@ -10,6 +12,7 @@ namespace G.Scripts.PlayerLogic
         
         PlayerController _playerController;
         IShooter m_shooter;
+        private PlayerComboSystem _arrowSequenceHandler;
 
         public Transform ClassicShootPoint => _classicShootPoint;
         
@@ -19,6 +22,10 @@ namespace G.Scripts.PlayerLogic
             G.Instance.Player = this;
 
             m_shooter = new ClassicShooter();
+
+            _arrowSequenceHandler = new PlayerComboSystem();
+            _arrowSequenceHandler.Start();
+            _arrowSequenceHandler.GiveNewCombo(3);
         }
     }
 }
