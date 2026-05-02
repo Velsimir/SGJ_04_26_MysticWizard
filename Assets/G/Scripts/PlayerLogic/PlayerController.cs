@@ -43,18 +43,15 @@ namespace G.Scripts.PlayerLogic
 
         private void Move(float deltaTime)
         {
-            // Вычисляем целевую позицию
             Vector2 targetPosition =
                 _rigidbody.position + new Vector2(0, _moveDirection.y) * _settings.speed * deltaTime;
 
-            // Ограничиваем границами
             if (targetPosition.y > _settings.topBorder)
                 targetPosition.y = _settings.topBorder;
 
             if (targetPosition.y < _settings.botBorder)
                 targetPosition.y = _settings.botBorder;
 
-            // Двигаем через Rigidbody2D для корректной работы физики
             _rigidbody.MovePosition(targetPosition);
         }
 
