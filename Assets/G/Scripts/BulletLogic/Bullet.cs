@@ -16,7 +16,6 @@ namespace G.Scripts.BulletLogic
         public event Action<IPoolable> e_onDespawnRequested;
         public GameObject GameObject => gameObject;
         public Transform Transform => transform;
-        public Rigidbody2D RigidBody => _rigidBody;
 
         private void OnTriggerEnter2D(Collider2D other)
         {
