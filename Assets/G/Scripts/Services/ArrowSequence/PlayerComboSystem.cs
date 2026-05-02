@@ -1,5 +1,4 @@
 ﻿using System;
-using G.Scripts.PlayerLogic;
 using G.Scripts.Services.Input;
 using G.Scripts.Services.Update;
 using G.Scripts.Ui;
@@ -12,7 +11,7 @@ namespace G.Scripts.Services.ArrowSequence
         private readonly ArrowSequenceHandler _comboHandler;
         private readonly ComboSequenceView _comboView;
         private readonly IInputService _inputService;
-        
+
         public event Action OnSuccess;
         public event Action OnFail;
 
@@ -28,12 +27,24 @@ namespace G.Scripts.Services.ArrowSequence
         }
 
         public void FixedUpdate(float deltaTime)
-        { }
+        {
+        }
 
-        public void Update(float deltaTime) => _comboHandler.Update(deltaTime);
-        
+        public void Update(float deltaTime)
+        {
+            _comboHandler.Update(deltaTime);
+
+            // Обновляем слайдер таймера
+            if (_comboView != null && _comboHandler.IsActive)
+            {
+                float normalizedTime = 1f - (_comboHandler.Timer / _comboHandler.InputTimeout);
+                _comboView.UpdateTimer(Mathf.Clamp01(normalizedTime));
+            }
+        }
+
         public void LateUpdate(float deltaTime)
-        { }
+        {
+        }
 
         public void GiveNewCombo(int length = 7)
         {
@@ -50,29 +61,24 @@ namespace G.Scripts.Services.ArrowSequence
         {
             Debug.Log("Комбинация выполнена успешно!");
             _comboView?.MarkAsCompleted();
-            _comboView?.MarkAsCompleted();
             OnSuccess?.Invoke();
         }
 
         private void OnComboFailed()
         {
             Debug.Log("Комбинация провалена");
-    
+
             int failIndex = _comboHandler.CurrentIndex;
-    
             _comboView?.MarkFailedAt(failIndex);
-    
-            _comboView?.MarkFailedAt(failIndex);
+
             OnFail?.Invoke();
         }
 
         public void Dispose()
         {
             _comboHandler?.Dispose();
-
             G.Instance.Services.GetService<IUpdateService>().Remove(this);
 
-            // Отписываемся
             _comboHandler.OnSequenceCompleted -= OnComboSuccess;
             _comboHandler.OnSequenceFailed -= OnComboFailed;
             _comboHandler.OnProgressChanged -= OnProgressChanged;

@@ -24,6 +24,9 @@ namespace G.Scripts.Services.ArrowSequence
 
         public IReadOnlyList<ArrowDirection> CurrentSequence => _currentSequence;
         public int CurrentIndex => _currentIndex;
+        public bool IsActive => _isActive;
+        public float Timer => _timer;
+        public float InputTimeout => _inputTimeout;
 
         public ArrowSequenceHandler(IInputService inputService)
         {

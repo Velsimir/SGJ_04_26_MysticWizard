@@ -1,6 +1,4 @@
-﻿using G.Scripts.Services.ArrowSequence;
-using G.Scripts.ShootersLogic;
-using G.Scripts.Ui;
+﻿using G.Scripts.Ui;
 using UnityEngine;
 
 namespace G.Scripts.PlayerLogic
@@ -29,7 +27,8 @@ namespace G.Scripts.PlayerLogic
 
         private void Awake()
         {
-            _playerController = new PlayerController(_rigibody, _playerSettings);
+            _playerController = new PlayerController(_rigibody, _animator, _playerSettings);
+    
             G.Instance.Player = this;
 
             _metamorphSystem = new PlayerMetamorphSystem(this, _comboView, _animator, _playerVisual, _playerSettings);

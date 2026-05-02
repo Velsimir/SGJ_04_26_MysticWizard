@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using G.Scripts.Services.ArrowSequence;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace G.Scripts.Ui
 {
@@ -16,12 +17,25 @@ namespace G.Scripts.Ui
         [SerializeField] private ArrowIcon _leftPrefab;
         [SerializeField] private ArrowIcon _rightPrefab;
 
+        [Header("Таймер")] [SerializeField] private Slider _timerSlider; // ← Добавь сюда Slider
+        [SerializeField] private Gradient _timerColor; // Опционально: цвет от зелёного к красному
+
         private readonly List<ArrowIcon> _currentIcons = new();
+
+        private void Awake()
+        {
+            if (_timerSlider != null)
+            {
+                _timerSlider.minValue = 0f;
+                _timerSlider.maxValue = 1f;
+                _timerSlider.value = 1f;
+            }
+        }
 
         public void ShowNewSequence(IReadOnlyList<ArrowDirection> sequence)
         {
             ClearIcons();
-
+            _timerSlider.gameObject.SetActive(true);
             foreach (var dir in sequence)
             {
                 ArrowIcon prefab = GetPrefabForDirection(dir);
@@ -31,6 +45,8 @@ namespace G.Scripts.Ui
                 icon.Init(dir);
                 _currentIcons.Add(icon);
             }
+
+            ResetTimerUI();
         }
 
         public void UpdateProgress(int correctCount)
@@ -44,13 +60,25 @@ namespace G.Scripts.Ui
             }
         }
 
+        public void UpdateTimer(float normalizedTime) // 1 = полный таймер, 0 = время вышло
+        {
+            if (_timerSlider == null) return;
+
+            _timerSlider.value = normalizedTime;
+
+            if (_timerColor != null)
+            {
+                _timerSlider.fillRect.GetComponent<Image>().color = _timerColor.Evaluate(normalizedTime);
+            }
+        }
+
         public void MarkAsCompleted()
         {
             foreach (var icon in _currentIcons)
                 icon.SetSuccess();
 
-            // Исчезает через 1 секунду после успеха
             StartCoroutine(ClearAfterDelay(1f));
+            HideTimer();
         }
 
         public void MarkFailedAt(int wrongIndex)
@@ -66,6 +94,19 @@ namespace G.Scripts.Ui
                 _currentIcons[i].SetNormal();
 
             StartCoroutine(ClearAfterDelay(1.5f));
+            HideTimer();
+        }
+
+        private void ResetTimerUI()
+        {
+            if (_timerSlider != null)
+                _timerSlider.value = 1f;
+        }
+
+        private void HideTimer()
+        {
+            if (_timerSlider != null)
+                _timerSlider.value = 0f;
         }
 
         private IEnumerator ClearAfterDelay(float delay)
@@ -92,6 +133,7 @@ namespace G.Scripts.Ui
                 Destroy(icon.gameObject);
 
             _currentIcons.Clear();
+            _timerSlider.gameObject.SetActive(false);
         }
     }
 }

@@ -79,7 +79,7 @@ namespace G.Scripts.PlayerLogic
 
                 case PlayerType.Sheep:
                     _visual.sprite = _settings.SheepSprite;
-                    ChangeShooter(new ClassicShooter(_player.ClassicTimeBetweenShoots));
+                    ChangeShooter(null);
                     break;
             }
         }
