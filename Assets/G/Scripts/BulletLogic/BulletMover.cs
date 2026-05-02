@@ -6,13 +6,11 @@ namespace G.Scripts.BulletLogic
 {
     public class BulletMover : IUpdatable, IDisposable
     {
-        private Transform _transform;
         private Rigidbody2D _rigidbody;
         private BulletSettings _settings;
-    
-        public BulletMover(Transform transform, Rigidbody2D rigidbody, BulletSettings settings)
+        
+        public BulletMover(Rigidbody2D rigidbody, BulletSettings settings)
         {
-            _transform = transform;
             _rigidbody = rigidbody;
             _settings = settings;
         
@@ -32,6 +30,7 @@ namespace G.Scripts.BulletLogic
 
         public void Dispose()
         {
+            _rigidbody.linearVelocity = Vector2.zero;
             G.Instance.Services.GetService<IUpdateService>().Remove(this);
         }
     }

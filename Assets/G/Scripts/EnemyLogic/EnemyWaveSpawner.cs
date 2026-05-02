@@ -45,7 +45,7 @@ namespace G.Scripts.EnemyLogic
             if (prefabs == null) return;
             foreach (var p in prefabs)
                 if (p)
-                    _spawnerService.Prewarm(p, 12);
+                    _spawnerService.Prewarm(p, 3);
         }
 
         public void FixedUpdate(float deltaTime)

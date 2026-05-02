@@ -6,19 +6,21 @@ namespace G.Scripts.EnemyLogic
 {
     public class Enemy : MonoBehaviour, IPoolable
     {
-        public event Action<IPoolable> e_onDespawnRequested;
-
-        public GameObject GameObject => gameObject;
-        public Transform Transform => transform;
-
         [SerializeField] private float _maxHp = 3f;
-
+        [SerializeField] private Animator _animator;
+        [SerializeField] private Sprite _skin;
+        [SerializeField] private SpriteRenderer _visual;
+        
         private float _currentHp;
-        private EnemyColumn _currentColumn; // Изменили название с Line на Column
+        private EnemyColumn _currentColumn;
         private int _columnIndex;
+        
+        public event Action<IPoolable> e_onDespawnRequested;
 
         public EnemyColumn CurrentColumn => _currentColumn;
         public int ColumnIndex => _columnIndex;
+        public GameObject GameObject => gameObject;
+        public Transform Transform => transform;
 
         public void Initialize(EnemyColumn column, int index, float hp = -1)
         {
@@ -30,6 +32,7 @@ namespace G.Scripts.EnemyLogic
         public void TakeDamage(float damage)
         {
             _currentHp -= damage;
+                _animator.SetTrigger("Hit");
             if (_currentHp <= 0f)
                 Die();
         }
@@ -42,13 +45,19 @@ namespace G.Scripts.EnemyLogic
 
         public void Despawn()
         {
-            e_onDespawnRequested?.Invoke(this);
+            _animator.SetBool("IsDead", true);
         }
 
-        public void OnSpawned() => gameObject.SetActive(true);
+        public void OnSpawned()
+        {
+            gameObject.SetActive(true);   
+        }
 
         public void OnDespawned()
         {
+            e_onDespawnRequested?.Invoke(this);
+            _animator.SetBool("IsDead", false);
+            _visual.sprite = _skin;
             gameObject.SetActive(false);
             _currentColumn = null;
         }

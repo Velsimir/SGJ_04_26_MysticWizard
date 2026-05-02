@@ -10,6 +10,7 @@ namespace G.Scripts.BulletLogic
         [SerializeField] private float _damage;
         [SerializeField] private BulletSettings _settings;
         [SerializeField] private Rigidbody2D _rigidBody;
+        [SerializeField] private Animator _animator;
         
         private BulletMover _bulletMover;
         
@@ -29,17 +30,18 @@ namespace G.Scripts.BulletLogic
         
         public void Despawn()
         {
-            OnDespawned();
+            _bulletMover.Dispose();
+            _animator.SetBool("IsExplosion", true);
         }
 
         public void OnSpawned()
         {
-            _bulletMover = new BulletMover(transform, _rigidBody, _settings);
+            _bulletMover = new BulletMover(_rigidBody, _settings);
         }
 
         public void OnDespawned()
         {
-            _bulletMover.Dispose();
+            _animator.SetBool("IsExplosion", false);
             e_onDespawnRequested?.Invoke(this);
         }
     }

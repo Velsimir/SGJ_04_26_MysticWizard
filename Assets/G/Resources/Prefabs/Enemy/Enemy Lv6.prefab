@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -1807692105399727566, guid: 074c9c68fb6bdb5498d6c53a469c1799, type: 3}
+  m_Sprite: {fileID: -9162897877804594813, guid: 3593e6beebc4ba84e98e55edeb4bd997, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -105,7 +105,7 @@ GameObject:
   - component: {fileID: 6421115644003526032}
   - component: {fileID: 7718354044943168755}
   m_Layer: 0
-  m_Name: Enemy Lv1
+  m_Name: Enemy Lv6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,9 +139,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e8ba6c7e3d47ed8f89cb814a118448, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::G.Scripts.EnemyLogic.Enemy
-  _maxHp: 1
+  _maxHp: 6
   _animator: {fileID: 7718354044943168755}
-  _skin: {fileID: -1807692105399727566, guid: 074c9c68fb6bdb5498d6c53a469c1799, type: 3}
+  _skin: {fileID: -9162897877804594813, guid: 3593e6beebc4ba84e98e55edeb4bd997, type: 3}
   _visual: {fileID: 2903716813048488342}
 --- !u!58 &1759081628447182613
 CircleCollider2D:

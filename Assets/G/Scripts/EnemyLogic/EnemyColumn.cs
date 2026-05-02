@@ -9,10 +9,22 @@ namespace G.Scripts.EnemyLogic
     {
         private readonly List<Enemy> _enemies = new List<Enemy>();
 
+        private EnemyColumnMover _mover;
         private float _moveSpeed = 0.5f;
         private bool _isActive = false;
 
         public IReadOnlyList<Enemy> Enemies => _enemies;
+
+        public float MoveSpeed
+        {
+            get => _moveSpeed;
+            set
+            {
+                _moveSpeed = value;
+                if (_mover != null)
+                    _mover.MoveSpeed = value;
+            }
+        }
 
         public void Setup(List<Enemy> enemies, float moveSpeed)
         {
@@ -26,19 +38,8 @@ namespace G.Scripts.EnemyLogic
             }
 
             _isActive = true;
-        }
 
-        private void Update()
-        {
-            if (!_isActive) return;
-
-            transform.Translate(Vector3.left * _moveSpeed * Time.deltaTime);
-
-            // Если колонна ушла за левый край
-            if (transform.position.x < -15f)
-            {
-                DestroyColumn();
-            }
+            _mover = new EnemyColumnMover(transform, this, _moveSpeed);
         }
 
         public void OnEnemyHit(Enemy hitEnemy, float damage)
@@ -56,7 +57,12 @@ namespace G.Scripts.EnemyLogic
 
         public void DestroyColumn()
         {
+            if (!_isActive) return;
+
             _isActive = false;
+
+            _mover?.Dispose();
+            _mover = null;
 
             foreach (var enemy in _enemies.ToList())
             {
@@ -66,6 +72,11 @@ namespace G.Scripts.EnemyLogic
 
             _enemies.Clear();
             Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            _mover?.Dispose();
         }
     }
 }
