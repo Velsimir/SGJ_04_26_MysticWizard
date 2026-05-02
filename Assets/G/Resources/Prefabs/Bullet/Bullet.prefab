@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::G.Scripts.BulletLogic.Bullet
   _damage: 1
-  _settings: {fileID: 11400000, guid: f6ca67e428e09374797cd1c95975c67c, type: 2}
+  _speed: 3
   _rigidBody: {fileID: 4444816379376604784}
   _animator: {fileID: 7500024830302232154}
 --- !u!50 &4444816379376604784

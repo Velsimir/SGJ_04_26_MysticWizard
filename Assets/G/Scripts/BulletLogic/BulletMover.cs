@@ -7,19 +7,19 @@ namespace G.Scripts.BulletLogic
     public class BulletMover : IUpdatable, IDisposable
     {
         private Rigidbody2D _rigidbody;
-        private BulletSettings _settings;
+        private float _speed;
         
-        public BulletMover(Rigidbody2D rigidbody, BulletSettings settings)
+        public BulletMover(Rigidbody2D rigidbody, float speed)
         {
             _rigidbody = rigidbody;
-            _settings = settings;
+            _speed = speed;
         
             G.Instance.Services.GetService<IUpdateService>().AddNew(this);
         }
 
         public void FixedUpdate(float deltaTime)
         {
-            _rigidbody.MovePosition(_rigidbody.position + Vector2.right * deltaTime * _settings.Speed);
+            _rigidbody.MovePosition(_rigidbody.position + Vector2.right * deltaTime * _speed);
         }
 
         public void Update(float deltaTime)

@@ -44,30 +44,34 @@ namespace G.Scripts.Ui
             }
         }
 
-        public void MarkFailedAt(int wrongIndex)
-        {
-            if (wrongIndex < 0 || wrongIndex >= _currentIcons.Count)
-                return;
-
-            for (int i = 0; i < wrongIndex; i++)
-            {
-                _currentIcons[i].SetSuccess();
-            }
-
-            _currentIcons[wrongIndex].SetFail();
-
-            for (int i = wrongIndex + 1; i < _currentIcons.Count; i++)
-            {
-                _currentIcons[i].SetNormal();
-            }
-            
-            StartCoroutine(ClearIconsCoroutine());
-        }
-
         public void MarkAsCompleted()
         {
             foreach (var icon in _currentIcons)
                 icon.SetSuccess();
+
+            // Исчезает через 1 секунду после успеха
+            StartCoroutine(ClearAfterDelay(1f));
+        }
+
+        public void MarkFailedAt(int wrongIndex)
+        {
+            if (wrongIndex < 0 || wrongIndex >= _currentIcons.Count) return;
+
+            for (int i = 0; i < wrongIndex; i++)
+                _currentIcons[i].SetSuccess();
+
+            _currentIcons[wrongIndex].SetFail();
+
+            for (int i = wrongIndex + 1; i < _currentIcons.Count; i++)
+                _currentIcons[i].SetNormal();
+
+            StartCoroutine(ClearAfterDelay(1.5f));
+        }
+
+        private IEnumerator ClearAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            ClearIcons();
         }
 
         private ArrowIcon GetPrefabForDirection(ArrowDirection dir)
@@ -82,18 +86,12 @@ namespace G.Scripts.Ui
             };
         }
 
-        private void ClearIcons()
+        public void ClearIcons()
         {
             foreach (var icon in _currentIcons)
                 Destroy(icon.gameObject);
 
             _currentIcons.Clear();
-        }
-        
-        private IEnumerator ClearIconsCoroutine()
-        {
-            yield return new WaitForSeconds(1.5f);
-            ClearIcons();
         }
     }
 }

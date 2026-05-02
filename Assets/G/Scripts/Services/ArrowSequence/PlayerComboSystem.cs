@@ -1,4 +1,5 @@
 ﻿using System;
+using G.Scripts.PlayerLogic;
 using G.Scripts.Services.Input;
 using G.Scripts.Services.Update;
 using G.Scripts.Ui;
@@ -11,6 +12,9 @@ namespace G.Scripts.Services.ArrowSequence
         private readonly ArrowSequenceHandler _comboHandler;
         private readonly ComboSequenceView _comboView;
         private readonly IInputService _inputService;
+        
+        public event Action OnSuccess;
+        public event Action OnFail;
 
         public PlayerComboSystem(ComboSequenceView comboView)
         {
@@ -18,7 +22,6 @@ namespace G.Scripts.Services.ArrowSequence
             _inputService = G.Instance.Services.GetService<IInputService>();
             _comboHandler = new ArrowSequenceHandler(_inputService);
 
-            // Подписки
             _comboHandler.OnSequenceCompleted += OnComboSuccess;
             _comboHandler.OnSequenceFailed += OnComboFailed;
             _comboHandler.OnProgressChanged += OnProgressChanged;
@@ -47,19 +50,20 @@ namespace G.Scripts.Services.ArrowSequence
         {
             Debug.Log("Комбинация выполнена успешно!");
             _comboView?.MarkAsCompleted();
-            G.Instance.Player.MakeSuccessMetamorph();
+            _comboView?.MarkAsCompleted();
+            OnSuccess?.Invoke();
         }
 
         private void OnComboFailed()
         {
             Debug.Log("Комбинация провалена");
     
-            // Передаём индекс, на котором произошла ошибка
-            int failIndex = _comboHandler.CurrentIndex; // нужно добавить свойство
+            int failIndex = _comboHandler.CurrentIndex;
     
             _comboView?.MarkFailedAt(failIndex);
     
-            G.Instance.Player.MakeBadMetamorph();
+            _comboView?.MarkFailedAt(failIndex);
+            OnFail?.Invoke();
         }
 
         public void Dispose()

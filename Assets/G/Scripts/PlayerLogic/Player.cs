@@ -7,43 +7,54 @@ namespace G.Scripts.PlayerLogic
 {
     public class Player : MonoBehaviour
     {
+        [SerializeField] private Animator _animator;
         [SerializeField] private PlayerSettings _playerSettings;
         [SerializeField] private Transform _classicShootPoint;
         [SerializeField] private Rigidbody2D _rigibody;
         [SerializeField] private ComboSequenceView _comboView;
-        
+        [SerializeField] private SpriteRenderer _playerVisual;
+
+        public float ClassicTimeBetweenShoots = 0.25f;
+        public float ExtraTimeBetweenShoots = 0.4f;
+        public float TimeToReturnToClassic  = 8f;
+        public int ComboLengthStart  = 3;
+        public int ComboLengthIncrease  = 1;
+        public int MaxComboLength = 9;
+
         private PlayerController _playerController;
-        private IShooter _shooter;
-        private PlayerComboSystem _arrowSequenceHandler;
+        private PlayerMetamorphSystem _metamorphSystem;
 
         public Transform ClassicShootPoint => _classicShootPoint;
-        
+        public PlayerMetamorphSystem MetamorphSystem => _metamorphSystem;
+
         private void Awake()
         {
             _playerController = new PlayerController(_rigibody, _playerSettings);
             G.Instance.Player = this;
 
-            _shooter = new ClassicShooter();
-
-            _arrowSequenceHandler = new PlayerComboSystem(_comboView);
-            _arrowSequenceHandler.GiveNewCombo(3);
+            _metamorphSystem = new PlayerMetamorphSystem(this, _comboView, _animator, _playerVisual, _playerSettings);
+            _metamorphSystem.ResetToClassic();
         }
 
         private void OnDestroy()
         {
-            _shooter.Dispose();
-            _arrowSequenceHandler.Dispose();
+            _metamorphSystem.Dispose();
             _playerController.Dispose();
         }
 
-        public void MakeSuccessMetamorph()
+        // Вызывается из анимационного события
+        public void OnMorphAnimationEnd()
         {
-            Debug.Log("Player make morph!");
+            _metamorphSystem.OnMorphAnimationEnd();
         }
+    }
 
-        public void MakeBadMetamorph()
-        {
-            Debug.Log("Player became sheep!");
-        }
+    public enum PlayerType
+    {
+        Classic,
+        Rabbit,
+        Hydra,
+        Salamander,
+        Sheep
     }
 }

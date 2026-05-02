@@ -400,7 +400,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f11b64fe462c41b5b468b8d8f5a6a9df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::G.Scripts.BulletLogic.BulletsHandler
+  _rabbitBulletPrefab: {fileID: 604372511518828603, guid: 50bda55ace853034f82a44eddea89afd, type: 3}
   _classicBulletPrefab: {fileID: 604372511518828603, guid: 029f30cfb537a394f8e64fdb4ffcc213, type: 3}
+  _hydraBulletPrefab: {fileID: 604372511518828603, guid: a3e9e541872c06447988ffe3ad165717, type: 3}
+  _salamanderBullet: {fileID: 604372511518828603, guid: 480dd3272607e114f96a562beef04f12, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

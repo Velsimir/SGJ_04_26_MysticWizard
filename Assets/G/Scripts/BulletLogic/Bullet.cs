@@ -8,7 +8,7 @@ namespace G.Scripts.BulletLogic
     public class Bullet : MonoBehaviour, IPoolable
     {
         [SerializeField] private float _damage;
-        [SerializeField] private BulletSettings _settings;
+        [SerializeField] private float _speed;
         [SerializeField] private Rigidbody2D _rigidBody;
         [SerializeField] private Animator _animator;
         
@@ -17,6 +17,7 @@ namespace G.Scripts.BulletLogic
         public event Action<IPoolable> e_onDespawnRequested;
         public GameObject GameObject => gameObject;
         public Transform Transform => transform;
+        public float Speed => _speed;
 
         private void OnTriggerEnter2D(Collider2D other)
         {
@@ -31,17 +32,17 @@ namespace G.Scripts.BulletLogic
         public void Despawn()
         {
             _bulletMover.Dispose();
-            _animator.SetBool("IsExplosion", true);
+            _animator?.SetBool("IsExplosion", true);
         }
 
         public void OnSpawned()
         {
-            _bulletMover = new BulletMover(_rigidBody, _settings);
+            _bulletMover = new BulletMover(_rigidBody, _speed);
         }
 
         public void OnDespawned()
         {
-            _animator.SetBool("IsExplosion", false);
+            _animator?.SetBool("IsExplosion", false);
             e_onDespawnRequested?.Invoke(this);
         }
     }

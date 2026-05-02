@@ -12,6 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 622f9db137844a368eed7f38632b4983, type: 3}
   m_Name: PlayerSettings
   m_EditorClassIdentifier: Assembly-CSharp::G.Scripts.PlayerLogic.PlayerSettings
+  _classicSprite: {fileID: -2772978781262668737, guid: ce6592a19d84fdf40bd9963250732a13, type: 3}
+  _rabbitSprite: {fileID: 7959094105007931956, guid: a14e6236ad559714d8affd5bfa00dce5, type: 3}
+  _hydraSprite: {fileID: 535075364039468812, guid: 77289942f2a9caf48829779dc00a096c, type: 3}
+  _salamanderSprite: {fileID: 3298363685790235025, guid: e2c1a1233fa069a4ba24d16c4d61d8eb, type: 3}
+  _sheepSprite: {fileID: -5151776411781382851, guid: 99297b52daef60c498bbedba8989276c, type: 3}
   _speed: 1
   _topBorder: 3
   _botBorder: -4

@@ -44,13 +44,13 @@ namespace G.Scripts.PlayerLogic
         private void Move(float deltaTime)
         {
             Vector2 targetPosition =
-                _rigidbody.position + new Vector2(0, _moveDirection.y) * _settings.speed * deltaTime;
+                _rigidbody.position + new Vector2(0, _moveDirection.y) * _settings.Speed * deltaTime;
 
-            if (targetPosition.y > _settings.topBorder)
-                targetPosition.y = _settings.topBorder;
+            if (targetPosition.y > _settings.TopBorder)
+                targetPosition.y = _settings.TopBorder;
 
-            if (targetPosition.y < _settings.botBorder)
-                targetPosition.y = _settings.botBorder;
+            if (targetPosition.y < _settings.BotBorder)
+                targetPosition.y = _settings.BotBorder;
 
             _rigidbody.MovePosition(targetPosition);
         }
