@@ -10,6 +10,7 @@ namespace G.Scripts.Services.Input
 
         public ReactiveProperty<Vector2> Move { get; private set; }
         public ReactiveProperty<Vector2> Look { get; private set; }
+        public ReactiveProperty<bool> Attack { get; private set; }
 
         public InputService()
         {
@@ -18,6 +19,8 @@ namespace G.Scripts.Services.Input
 
             Move = BindMovementInput(_inputActions.Player.Move);
             Look = BindMovementInput(_inputActions.Player.Look);
+
+            Attack = BindButtonInput(_inputActions.Player.Attack);
         }
 
         private ReactiveProperty<Vector2> BindMovementInput(InputAction playerMove)
@@ -30,11 +33,22 @@ namespace G.Scripts.Services.Input
             
             return vector;
         }
+        
+        private ReactiveProperty<bool> BindButtonInput(InputAction action)
+        {
+            ReactiveProperty<bool> button = new ReactiveProperty<bool>(false);
+
+            action.started += ctx => button.Value = true;
+            action.canceled += ctx => button.Value = false;
+        
+            return button;
+        }
     }
 
     public interface IInputService : IService
     {
         ReactiveProperty<Vector2> Move { get; }
         ReactiveProperty<Vector2> Look { get; }
+        ReactiveProperty<bool> Attack { get; }
     }
 }

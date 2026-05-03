@@ -12,6 +12,7 @@ namespace G.Scripts.SceneLoader
         
         public void Show()
         {
+            _canvasGroup.interactable = true;
             _canvasGroup.alpha = 1;
             
             Debug.Log("Show Loader screen");
@@ -30,6 +31,8 @@ namespace G.Scripts.SceneLoader
                 _canvasGroup.alpha -= 0.05f;
                 yield return _wait;
             }
+            
+            _canvasGroup.interactable = false;
         }
     }
 }

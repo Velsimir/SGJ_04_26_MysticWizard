@@ -139,10 +139,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86e8ba6c7e3d47ed8f89cb814a118448, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::G.Scripts.EnemyLogic.Enemy
-  _maxHp: 6
+  _maxHp: 3
   _animator: {fileID: 7718354044943168755}
   _skin: {fileID: -9162897877804594813, guid: 3593e6beebc4ba84e98e55edeb4bd997, type: 3}
   _visual: {fileID: 2903716813048488342}
+  _isBoss: 0
 --- !u!58 &1759081628447182613
 CircleCollider2D:
   m_ObjectHideFlags: 0

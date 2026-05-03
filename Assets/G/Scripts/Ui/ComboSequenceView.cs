@@ -17,7 +17,8 @@ namespace G.Scripts.Ui
         [SerializeField] private ArrowIcon _leftPrefab;
         [SerializeField] private ArrowIcon _rightPrefab;
 
-        [Header("Таймер")] [SerializeField] private Slider _timerSlider; // ← Добавь сюда Slider
+        [Header("Таймер")] [SerializeField] private GameObject _timerGameObject;
+        [SerializeField] private Image _timerSlider; // ← Добавь сюда Slider
         [SerializeField] private Gradient _timerColor; // Опционально: цвет от зелёного к красному
 
         private readonly List<ArrowIcon> _currentIcons = new();
@@ -26,9 +27,9 @@ namespace G.Scripts.Ui
         {
             if (_timerSlider != null)
             {
-                _timerSlider.minValue = 0f;
-                _timerSlider.maxValue = 1f;
-                _timerSlider.value = 1f;
+                _timerSlider.fillAmount = 0f;
+                _timerSlider.fillAmount = 1f;
+                _timerSlider.fillAmount = 1f;
             }
         }
 
@@ -36,6 +37,7 @@ namespace G.Scripts.Ui
         {
             ClearIcons();
             _timerSlider.gameObject.SetActive(true);
+            _timerGameObject.SetActive(true);
             foreach (var dir in sequence)
             {
                 ArrowIcon prefab = GetPrefabForDirection(dir);
@@ -64,11 +66,11 @@ namespace G.Scripts.Ui
         {
             if (_timerSlider == null) return;
 
-            _timerSlider.value = normalizedTime;
+            _timerSlider.fillAmount = normalizedTime;
 
             if (_timerColor != null)
             {
-                _timerSlider.fillRect.GetComponent<Image>().color = _timerColor.Evaluate(normalizedTime);
+                _timerSlider.color = _timerColor.Evaluate(normalizedTime);
             }
         }
 
@@ -100,13 +102,13 @@ namespace G.Scripts.Ui
         private void ResetTimerUI()
         {
             if (_timerSlider != null)
-                _timerSlider.value = 1f;
+                _timerSlider.fillAmount = 1f;
         }
 
         private void HideTimer()
         {
             if (_timerSlider != null)
-                _timerSlider.value = 0f;
+                _timerSlider.fillAmount = 0f;
         }
 
         private IEnumerator ClearAfterDelay(float delay)
@@ -134,6 +136,7 @@ namespace G.Scripts.Ui
 
             _currentIcons.Clear();
             _timerSlider.gameObject.SetActive(false);
+            _timerGameObject.SetActive(false);
         }
     }
 }

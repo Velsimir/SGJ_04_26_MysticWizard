@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using G.Scripts.EnemyLogic;
+using G.Scripts.Services;
+using G.Scripts.Services.SoundService;
 using G.Scripts.Ui;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +22,9 @@ namespace G.Scripts.PlayerLogic
         
         private Queue<float> _leakTimestamps = new Queue<float>();
         private Player _player;
+        private Sound _sound;
+        
+        public static event Action isBossWin;
 
         private void Start()
         {
@@ -30,12 +36,19 @@ namespace G.Scripts.PlayerLogic
                 color.a = 0f;
                 _redScreen.color = color;
             }
+            
+            _sound = G.Instance.Services.GetService<Sound>();
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.TryGetComponent(out Enemy enemy))
+            {
                 RegisterLeak();
+                if (enemy.IsBoss)
+                    isBossWin?.Invoke();
+            }
+
         }
 
         private void RegisterLeak()
@@ -66,6 +79,7 @@ namespace G.Scripts.PlayerLogic
 
         private void ShowEndScreen()
         {
+            _sound.PlaySFX(_sound.смертьМяурлина);
             _endGameScreen.Show();
         }
 
@@ -73,6 +87,8 @@ namespace G.Scripts.PlayerLogic
         {
             if (_redScreen == null) return;
 
+            _sound.PlaySFX(_sound.урон);
+            
             _redScreen.DOKill();
 
             _redScreen.DOFade(_redFlashAlpha, _redFlashDuration / 2f)

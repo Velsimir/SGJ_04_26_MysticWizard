@@ -1,5 +1,6 @@
 ﻿using System;
 using G.Scripts.EnemyLogic;
+using G.Scripts.Services.SoundService;
 using G.Scripts.Services.Spawner;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace G.Scripts.BulletLogic
         [SerializeField] private Animator _animator;
         
         private BulletMover _bulletMover;
+        private Sound _sound;
         
         public event Action<IPoolable> e_onDespawnRequested;
         public GameObject GameObject => gameObject;
@@ -37,11 +39,13 @@ namespace G.Scripts.BulletLogic
 
         public void OnSpawned()
         {
+            _sound = G.Instance.Services.GetService<Sound>();
             _bulletMover = new BulletMover(_rigidBody, _speed);
         }
 
         public void OnDespawned()
         {
+            _sound.PlaySFX(_sound.пуф);
             _animator?.SetBool("IsExplosion", false);
             _bulletMover.Dispose();
             e_onDespawnRequested?.Invoke(this);

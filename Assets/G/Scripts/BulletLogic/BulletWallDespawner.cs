@@ -1,4 +1,5 @@
-﻿using G.Scripts.EnemyLogic;
+﻿using System;
+using G.Scripts.EnemyLogic;
 using UnityEngine;
 
 namespace G.Scripts.BulletLogic
@@ -18,7 +19,7 @@ namespace G.Scripts.BulletLogic
                 
                 case DespawnerType.Bullets:
                     if (other.TryGetComponent(out Bullet bullet))
-                        bullet.Despawn();
+                    bullet.Despawn();
                     break;
             }
             

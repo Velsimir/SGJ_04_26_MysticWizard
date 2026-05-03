@@ -2,6 +2,7 @@
 using System.Collections;
 using DG.Tweening;
 using G.Scripts.SceneLoader;
+using G.Scripts.Services.SoundService;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,10 +47,18 @@ namespace G.Scripts.Ui
 
         [Header("Авторы")] [SerializeField] private Button _exitFromCreditsButton;
 
+        [Header("Комикс")] [SerializeField] private GameObject _prehistory;
+        
         private Coroutine _memeCoroutine;
+
+        private Sound _sound;
 
         private void OnEnable()
         {
+            _sound = G.Instance.Services.GetService<Sound>();
+            _volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+            _volumeSlider.value = AudioListener.volume;
+            
             _chooseCharacterButton.onClick.AddListener(() => OpenCharacterSelect());
             _settingsButton.onClick.AddListener(() => OpenSettings());
             _authorsButton.onClick.AddListener(() => OpenCredits());
@@ -71,7 +80,8 @@ namespace G.Scripts.Ui
             // Скрываем всё в начале
             HideAllCharacterEffects();
             _memeRtx.SetActive(false);
-        }
+    }
+
 
         private void OnDisable()
         {
@@ -89,6 +99,8 @@ namespace G.Scripts.Ui
             _volumeSlider.onValueChanged.RemoveListener(OnVolumeChanged);
 
             _memeButton.onClick.RemoveListener(OnMemeButtonClicked);
+            
+            _volumeSlider.onValueChanged.RemoveListener(OnVolumeChanged);
         }
 
         #region Навигация
@@ -177,7 +189,7 @@ namespace G.Scripts.Ui
             image.DOFade(1f, 0.3f).SetEase(Ease.InOutSine).OnComplete(() =>
             {
                 // Исчезновение
-                image.DOFade(0f, 0.9f).SetEase(Ease.InOutSine).OnComplete(() =>
+                image.DOFade(0f, 2f).SetEase(Ease.InOutSine).OnComplete(() =>
                 {
                     background.SetActive(false);
                     image.gameObject.SetActive(false);
@@ -189,7 +201,8 @@ namespace G.Scripts.Ui
 
         private void StartGame()
         {
-            G.Instance.Services.GetService<ISceneLoaderService>().LoadScene("PlayRoom");
+            _sound.MusicVolume = 0.2f;
+            _prehistory.SetActive(true);
         }
 
         private void HideAllCharacterEffects()
@@ -209,7 +222,17 @@ namespace G.Scripts.Ui
 
         private void OnVolumeChanged(float value)
         {
-            AudioListener.volume = value;
+            if (_sound != null)
+            {
+                _sound.MasterVolume = value;
+            }
+            else
+            {
+                AudioListener.volume = value;
+            }
+        
+            PlayerPrefs.SetFloat("MasterVolume", value);
+            PlayerPrefs.Save();
         }
 
         #endregion

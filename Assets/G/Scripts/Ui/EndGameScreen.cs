@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using G.Scripts.PlayerLogic;
 using G.Scripts.SceneLoader;
 using G.Scripts.Services.Update;
 using UnityEngine;
@@ -10,21 +12,24 @@ namespace G.Scripts.Ui
     {
         [SerializeField] private Button _button;
         [SerializeField] private GameObject _endButtonImage;
+        [SerializeField] private GameObject _background;
         
         private void OnEnable()
         {
+            PlayerDamageZone.isBossWin += Show;
             _button.onClick.AddListener(RestartGame);
         }
 
         private void OnDisable()
         {
             _button.onClick.RemoveListener(RestartGame);
+            PlayerDamageZone.isBossWin -= Show;
         }
 
         public void Show()
         {
             G.Instance.Services.GetService<IUpdateService>().SetTimeScale(0.01f);
-            gameObject.SetActive(true);
+            _background.SetActive(true);
             StartCoroutine(ShowButtonWithDelay());
         }
 

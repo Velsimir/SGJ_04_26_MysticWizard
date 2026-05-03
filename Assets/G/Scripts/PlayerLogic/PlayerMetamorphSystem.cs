@@ -1,6 +1,7 @@
 ﻿using System;
 using G.Scripts.Services;
 using G.Scripts.Services.ArrowSequence;
+using G.Scripts.Services.SoundService;
 using G.Scripts.Services.Update;
 using G.Scripts.ShootersLogic;
 using G.Scripts.Ui;
@@ -21,7 +22,8 @@ namespace G.Scripts.PlayerLogic
 
         private IShooter _currentShooter;
         private PlayerComboSystem _comboSystem;
-
+        private Sound _sound;
+        
         private float _returnTimer;
         private bool _isReturningToClassic;
         private bool _isWorking;
@@ -44,6 +46,7 @@ namespace G.Scripts.PlayerLogic
             _comboSystem.OnFail += HandleComboFail;
 
             G.Instance.Services.GetService<IUpdateService>().AddNew(this);
+            _sound = G.Instance.Services.GetService<Sound>();
             G.Instance.Services.AddService(this);
         }
 
@@ -115,6 +118,8 @@ namespace G.Scripts.PlayerLogic
 
         private void ApplyCurrentForm()
         {
+            _sound.PlaySFX(_sound.метаморфоза);
+            
             switch (_currentType)
             {
                 case PlayerType.Classic:
@@ -139,7 +144,7 @@ namespace G.Scripts.PlayerLogic
 
                 case PlayerType.Sheep:
                     _visual.sprite = _settings.SheepSprite;
-                    ChangeShooter(null);
+                    ChangeShooter(new SheepShooter(_player.ClassicTimeBetweenShoots));
                     break;
             }
         }
@@ -152,9 +157,23 @@ namespace G.Scripts.PlayerLogic
 
         private void StartNewCombo()
         {
-            int length = Mathf.Clamp(_player.ComboLengthStart + _successStreak * _player.ComboLengthIncrease,
-                _player.ComboLengthStart, _player.MaxComboLength);
-
+            int length;
+    
+            switch (MaxStreakLevel)
+            {
+                case 1:
+                    length = 3;
+                    break;
+                case 2:
+                    length = 5;
+                    break;
+                default: // 3 и выше
+                    length = 7;
+                    break;
+            }
+    
+            length = Mathf.Clamp(length, _player.ComboLengthStart, _player.MaxComboLength);
+    
             _comboSystem.GiveNewCombo(length);
         }
 
