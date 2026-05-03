@@ -10,7 +10,7 @@ namespace G.Scripts.EnemyLogic
 
         private EnemyWaveSpawner _spawner;
 
-        private void Start()
+        private void Awake()
         {
             if (_waveConfig == null || _enemyRoot == null)
             {

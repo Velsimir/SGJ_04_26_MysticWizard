@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using G.Scripts.Services;
 using G.Scripts.Services.Spawner;
 using G.Scripts.Services.Update;
 using UnityEngine;
@@ -7,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace G.Scripts.EnemyLogic
 {
-    public class EnemyWaveSpawner : IUpdatable, IDisposable
+    public class EnemyWaveSpawner : IUpdatable, IDisposable, IService
     {
         private readonly ISpawnerService _spawnerService;
         private readonly IUpdateService _updateService;
@@ -18,6 +19,8 @@ namespace G.Scripts.EnemyLogic
         private float _timer;
         private int _currentWave = 0;
         private bool _isSpawning = true;
+        
+        public event Action<int> OnWaveSpawned;
 
         public EnemyWaveSpawner(EnemyWaveConfig config, Transform enemyRoot)
         {
@@ -29,8 +32,10 @@ namespace G.Scripts.EnemyLogic
 
             _updateService.AddNew(this);
             PrewarmAll();
+            
+            G.Instance.Services.AddService(this);
         }
-
+        
         private void PrewarmAll()
         {
             PrewarmTier(_config.tier1Prefabs);
@@ -75,6 +80,8 @@ namespace G.Scripts.EnemyLogic
 
                 if (_config.totalWaves > 0 && _currentWave >= _config.totalWaves)
                     _isSpawning = false;
+                
+                OnWaveSpawned?.Invoke(_currentWave);
             }
         }
 
@@ -166,6 +173,7 @@ namespace G.Scripts.EnemyLogic
         {
             _isSpawning = false;
             _updateService.Remove(this);
+            G.Instance.Services.RemoveService<EnemyWaveSpawner>();
         }
     }
 }

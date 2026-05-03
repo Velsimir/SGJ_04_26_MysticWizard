@@ -32,7 +32,7 @@ namespace G.Scripts.PlayerLogic
             G.Instance.Player = this;
 
             _metamorphSystem = new PlayerMetamorphSystem(this, _comboView, _animator, _playerVisual, _playerSettings);
-            _metamorphSystem.ResetToClassic();
+            _metamorphSystem.ResetToClassic(false);
         }
 
         private void OnDestroy()

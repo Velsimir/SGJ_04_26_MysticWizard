@@ -12,6 +12,8 @@ namespace G.Scripts.Services.ArrowSequence
         private readonly ComboSequenceView _comboView;
         private readonly IInputService _inputService;
 
+        private bool _isWorking;
+        
         public event Action OnSuccess;
         public event Action OnFail;
 
@@ -27,11 +29,13 @@ namespace G.Scripts.Services.ArrowSequence
         }
 
         public void FixedUpdate(float deltaTime)
-        {
-        }
+        { }
 
         public void Update(float deltaTime)
         {
+            if (_isWorking == false)
+                return;
+            
             _comboHandler.Update(deltaTime);
 
             // Обновляем слайдер таймера
@@ -50,6 +54,16 @@ namespace G.Scripts.Services.ArrowSequence
         {
             _comboHandler.StartNewSequence(length);
             _comboView?.ShowNewSequence(_comboHandler.CurrentSequence);
+        }
+        
+        public void StartSystem()
+        {
+            _isWorking = true;
+        }
+        
+        public void StopSystem()
+        {
+            _isWorking = false;
         }
 
         private void OnProgressChanged(int correctCount)

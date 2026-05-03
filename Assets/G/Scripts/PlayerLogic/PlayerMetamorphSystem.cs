@@ -1,4 +1,5 @@
 ﻿using System;
+using G.Scripts.Services;
 using G.Scripts.Services.ArrowSequence;
 using G.Scripts.Services.Update;
 using G.Scripts.ShootersLogic;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace G.Scripts.PlayerLogic
 {
-    public class PlayerMetamorphSystem : IDisposable, IUpdatable
+    public class PlayerMetamorphSystem : IDisposable, IUpdatable, IService
     {
         private readonly Player _player;
         private readonly ComboSequenceView _comboView;
@@ -23,6 +24,7 @@ namespace G.Scripts.PlayerLogic
 
         private float _returnTimer;
         private bool _isReturningToClassic;
+        private bool _isWorking;
 
         public PlayerType CurrentType => _currentType;
         public int SuccessStreak => _successStreak;
@@ -41,19 +43,60 @@ namespace G.Scripts.PlayerLogic
             _comboSystem.OnFail += HandleComboFail;
 
             G.Instance.Services.GetService<IUpdateService>().AddNew(this);
+            G.Instance.Services.AddService(this);
         }
 
-        public void ResetToClassic()
+        public void Update(float deltaTime)
+        {
+            if (_isWorking == false)
+                return;
+            
+            _comboSystem.Update(deltaTime);
+
+            if (_isReturningToClassic)
+            {
+                _returnTimer -= deltaTime;
+                if (_returnTimer <= 0f)
+                {
+                    _currentType = PlayerType.Classic;
+                    _animator.SetTrigger("Morph");
+                    _isReturningToClassic = false;
+                }
+            }
+        }
+
+        public void FixedUpdate(float deltaTime)
+        { }
+
+        public void LateUpdate(float deltaTime)
+        { }
+
+        public void ResetToClassic(bool showNewCombo = true)
         {
             _currentType = PlayerType.Classic;
             _successStreak = 0;
             _isReturningToClassic = false;
 
             ApplyCurrentForm();
-            StartNewCombo();
+
+            if (showNewCombo)
+                StartNewCombo();
         }
 
-        public void ApplyCurrentForm()
+        public void StartSystem()
+        {
+            _isWorking = true;
+            _comboSystem.StartSystem();
+            StartNewCombo();
+        }
+        
+        public void StopSystem()
+        {
+            _isWorking = false;
+            _comboSystem.StopSystem();
+        }
+
+        private void ApplyCurrentForm()
         {
             switch (_currentType)
             {
@@ -127,28 +170,6 @@ namespace G.Scripts.PlayerLogic
             _returnTimer = _player.TimeToReturnToClassic;
         }
 
-        public void FixedUpdate(float deltaTime)
-        { }
-
-        public void Update(float deltaTime)
-        {
-            _comboSystem.Update(deltaTime);
-
-            if (_isReturningToClassic)
-            {
-                _returnTimer -= deltaTime;
-                if (_returnTimer <= 0f)
-                {
-                    _currentType = PlayerType.Classic;
-                    _animator.SetTrigger("Morph");
-                    _isReturningToClassic = false;
-                }
-            }
-        }
-
-        public void LateUpdate(float deltaTime)
-        { }
-
         public void Dispose()
         {
             _comboSystem.OnSuccess -= HandleComboSuccess;
@@ -156,6 +177,7 @@ namespace G.Scripts.PlayerLogic
             _comboSystem.Dispose();
             _currentShooter?.Dispose();
             G.Instance.Services.GetService<IUpdateService>().Remove(this);
+            G.Instance.Services.RemoveService<PlayerMetamorphSystem>();;
         }
 
         public void OnMorphAnimationEnd()
