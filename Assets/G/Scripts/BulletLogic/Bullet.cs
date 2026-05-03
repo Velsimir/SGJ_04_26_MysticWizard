@@ -43,7 +43,13 @@ namespace G.Scripts.BulletLogic
         public void OnDespawned()
         {
             _animator?.SetBool("IsExplosion", false);
+            _bulletMover.Dispose();
             e_onDespawnRequested?.Invoke(this);
+        }
+
+        private void OnDestroy()
+        {
+            _bulletMover.Dispose();
         }
     }
 }

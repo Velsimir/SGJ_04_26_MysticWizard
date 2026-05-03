@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae8f9c293eb744c6ae65e0456ebb7767, type: 3}
   m_Name: New Enemy Wave Config
   m_EditorClassIdentifier: Assembly-CSharp::G.Scripts.EnemyLogic.EnemyWaveConfig
-  totalWaves: 10
+  totalWaves: 20
   timeBetweenWaves: 5.5
   spawnX: 10
   minY: -4

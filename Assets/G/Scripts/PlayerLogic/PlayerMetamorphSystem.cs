@@ -75,6 +75,7 @@ namespace G.Scripts.PlayerLogic
         public void IncreaseMetamorphLevel()
         {
             MaxStreakLevel = Mathf.Min(MaxStreakLevel + 1, 3); // максимум 3 уровня
+            _successStreak = MaxStreakLevel;
             Debug.Log($"Метаморфозы улучшены! Уровень: {MaxStreakLevel}");
         }
 
