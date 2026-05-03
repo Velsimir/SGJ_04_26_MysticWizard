@@ -28,6 +28,7 @@ namespace G.Scripts.PlayerLogic
 
         public PlayerType CurrentType => _currentType;
         public int SuccessStreak => _successStreak;
+        public int MaxStreakLevel { get; private set; } = 0;
 
         public PlayerMetamorphSystem(Player player, ComboSequenceView comboView, Animator animator,
             SpriteRenderer visual, PlayerSettings settings)
@@ -70,8 +71,14 @@ namespace G.Scripts.PlayerLogic
 
         public void LateUpdate(float deltaTime)
         { }
+        
+        public void IncreaseMetamorphLevel()
+        {
+            MaxStreakLevel = Mathf.Min(MaxStreakLevel + 1, 3); // максимум 3 уровня
+            Debug.Log($"Метаморфозы улучшены! Уровень: {MaxStreakLevel}");
+        }
 
-        public void ResetToClassic(bool showNewCombo = true)
+        public void ResetToClassic()
         {
             _currentType = PlayerType.Classic;
             _successStreak = 0;
@@ -79,8 +86,17 @@ namespace G.Scripts.PlayerLogic
 
             ApplyCurrentForm();
 
-            if (showNewCombo)
+            if (MaxStreakLevel > 0)
                 StartNewCombo();
+        }
+
+        public void ForceClassic()
+        {
+            _currentType = PlayerType.Classic;
+            _successStreak = 0;
+            _isReturningToClassic = false;
+
+            ApplyCurrentForm();
         }
 
         public void StartSystem()
@@ -89,7 +105,7 @@ namespace G.Scripts.PlayerLogic
             _comboSystem.StartSystem();
             StartNewCombo();
         }
-        
+
         public void StopSystem()
         {
             _isWorking = false;
@@ -143,13 +159,13 @@ namespace G.Scripts.PlayerLogic
 
         private void HandleComboSuccess()
         {
-            _successStreak++;
+            _successStreak = Mathf.Min(_successStreak + 1, MaxStreakLevel);
 
             PlayerType nextType = _successStreak switch
             {
                 1 => PlayerType.Rabbit,
                 2 => PlayerType.Hydra,
-                3 or > 3 => PlayerType.Salamander,
+                3 => PlayerType.Salamander,
                 _ => PlayerType.Classic
             };
 

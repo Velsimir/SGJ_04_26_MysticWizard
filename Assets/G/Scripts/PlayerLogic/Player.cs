@@ -32,7 +32,7 @@ namespace G.Scripts.PlayerLogic
             G.Instance.Player = this;
 
             _metamorphSystem = new PlayerMetamorphSystem(this, _comboView, _animator, _playerVisual, _playerSettings);
-            _metamorphSystem.ResetToClassic(false);
+            _metamorphSystem.ResetToClassic();
         }
 
         private void OnDestroy()
@@ -41,7 +41,6 @@ namespace G.Scripts.PlayerLogic
             _playerController.Dispose();
         }
 
-        // Вызывается из анимационного события
         public void OnMorphAnimationEnd()
         {
             _metamorphSystem.OnMorphAnimationEnd();

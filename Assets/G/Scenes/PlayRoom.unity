@@ -829,8 +829,8 @@ MonoBehaviour:
   _nextButton: {fileID: 340197410}
   _waveToFirstStory: 1
   _waveToSecondStory: 3
-  _waveToThirdStory: 6
-  _waveToForthStory: 8
+  _waveToThirdStory: 10
+  _waveToForthStory: 10
 --- !u!95 &714933396
 Animator:
   serializedVersion: 7
@@ -1008,7 +1008,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+  m_text: "\u0431\u0443\u043B\u043E\u0447\u0430"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b2ed24d9563888742a7cdca5b6f25e93, type: 2}
   m_sharedMaterial: {fileID: -3283047656654847822, guid: b2ed24d9563888742a7cdca5b6f25e93, type: 2}

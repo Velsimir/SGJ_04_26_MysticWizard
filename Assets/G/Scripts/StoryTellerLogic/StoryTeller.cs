@@ -30,6 +30,7 @@ namespace G.Scripts.StoryTellerLogic
 
         private bool _isShowingStory = false;
         private bool _nextClicked = false;
+        private int _currentStoryProgress = 0;
 
         private readonly DialogueLine[] _story1 =
         {
@@ -72,7 +73,7 @@ namespace G.Scripts.StoryTellerLogic
             _metamorphSystem = G.Instance.Services.GetService<PlayerMetamorphSystem>();
             _enemyWaveSpawner = G.Instance.Services.GetService<EnemyWaveSpawner>();
             _updateService = G.Instance.Services.GetService<IUpdateService>();
-            
+
             if (_enemyWaveSpawner != null)
                 _enemyWaveSpawner.OnWaveSpawned += TryShowNextStoryChapter;
 
@@ -84,7 +85,7 @@ namespace G.Scripts.StoryTellerLogic
         private void TryShowNextStoryChapter(int currentWave)
         {
             if (_isShowingStory) return;
-            
+
             DialogueLine[] dialogue = currentWave switch
             {
                 var w when w == _waveToFirstStory => _story1,
@@ -95,40 +96,41 @@ namespace G.Scripts.StoryTellerLogic
             };
 
             if (dialogue != null)
-                StartCoroutine(PlayStoryDialogue(dialogue));
+                StartCoroutine(PlayStoryDialogue(dialogue, currentWave));
         }
 
-        private IEnumerator PlayStoryDialogue(DialogueLine[] dialogue)
+        private IEnumerator PlayStoryDialogue(DialogueLine[] dialogue, int currentWave)
         {
-            _updateService.LerpTimeScale(0.05f, 1f);
-            _textBarAnimator.SetBool("IsVisible", true);
+            if (_currentStoryProgress > 1)
+                _metamorphSystem.ForceClassic();
             
             _isShowingStory = true;
             _metamorphSystem?.StopSystem();
+            _updateService.LerpTimeScale(0.05f, 1.2f);
+
             _nextButton.gameObject.SetActive(true);
+            _textBarAnimator.SetBool("IsVisible", true);
             _storyText.text = "";
 
             foreach (var line in dialogue)
             {
-                // Показываем персонажа
-                if (line.Speaker == Speaker.Fairy)
+                bool isFairy = line.Speaker == Speaker.Fairy;
+
+                if (isFairy)
                     _fairyAnimator.SetBool("IsVisible", true);
                 else
                     _wizardAnimator.SetBool("IsVisible", true);
 
-                // Ждём окончания анимации появления
-                yield return new WaitForSeconds(0.6f);
+                yield return new WaitForSeconds(0.6f); // время появления персонажа
 
-                // Показываем текст
                 _storyText.text = line.Text;
 
-                // Ждём нажатия кнопки
                 _nextClicked = false;
                 yield return new WaitUntil(() => _nextClicked);
 
-                // Скрываем текст и персонажа
                 _storyText.text = "";
-                if (line.Speaker == Speaker.Fairy)
+
+                if (isFairy)
                     _fairyAnimator.SetBool("IsVisible", false);
                 else
                     _wizardAnimator.SetBool("IsVisible", false);
@@ -136,12 +138,36 @@ namespace G.Scripts.StoryTellerLogic
                 yield return new WaitForSeconds(0.4f);
             }
 
-            // Завершение истории
+            // === После окончания истории ===
             HideCharacters();
             _nextButton.gameObject.SetActive(false);
-            _storyText.text = "";
 
-            _metamorphSystem?.StartSystem();
+            _currentStoryProgress++;
+
+            // Открываем возможности в зависимости от прогресса
+            switch (_currentStoryProgress)
+            {
+                case 1: // После первой истории — ничего
+                    break;
+
+                case 2: // После второй — базовые комбо (1 стрик)
+                    _metamorphSystem.IncreaseMetamorphLevel();
+                    _metamorphSystem.StartSystem();
+                    break;
+
+                case 3: // После третьей — до Hydra
+                    _metamorphSystem.IncreaseMetamorphLevel();
+                    _metamorphSystem.StartSystem();
+                    break;
+
+                case 4: // После четвёртой — полный доступ
+                    _metamorphSystem.IncreaseMetamorphLevel();
+                    _metamorphSystem.StartSystem();
+                    break;
+            }
+
+            _updateService.LerpTimeScale(1f, 1f);
+
             _isShowingStory = false;
         }
 
