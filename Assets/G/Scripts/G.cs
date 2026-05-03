@@ -30,7 +30,7 @@ namespace G.Scripts
             
             RegisterServices();
             
-            Services.GetService<ISceneLoaderService>().LoadScene("PlayRoom");
+            Services.GetService<ISceneLoaderService>().LoadScene("Menu");
         }
 
         private void RegisterServices()
